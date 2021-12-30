@@ -1,0 +1,95 @@
+greeting:
+  message: "hello"
+
+quarkus:
+  http:
+    port: 9010
+    access-log:
+      enabled: true
+    cors: true
+    non-application-root-path: /actuator
+#    auth:
+#      permission:
+#        authenticated:
+#          paths: /hello
+#          policy: authenticated
+#        edit:
+#          paths: /hello
+#          methods: GET
+#          policy: role-edit
+#        view:
+#          paths: ${service.api.base-path}/hello/sayHello
+#          methods: GET
+#          policy: role-edit
+#        permit1:
+#          paths: /swagger-ui.html
+#          policy: permit
+#          methods: GET
+#      policy:
+#        role-edit:
+#          roles-allowed: edit
+#        role-view:
+#          roles-allowed: view,edit
+
+
+  application:
+    name: quarkus-keycloak-camel-server
+    version: ver1.0
+#  oidc:
+#    auth-server-url: http://localhost:7080/auth/realms/saber66
+#    client-id: saberClient
+#    application-type: service
+#    tls:
+#     verification: none
+#    credentials:
+#        secret: cccf8261-9276-4751-834b-48958e8f1660
+#  keycloak:
+#     policy-enforcer:
+#        enable : true
+#     connection: 2000
+
+  vertx:
+    worker-pool-size: 4000
+    queue-size: 4000
+    resolver:
+      cache-min-time-to-live: 30
+    eventbus:
+      accept-backlog: 500
+      idle-timeout: 60000
+      connect-timeout: 60
+    event-loops-pool-size: 400
+  micrometer:
+    binder:
+      vertx:
+        enabled: true
+    export:
+      prometheus:
+        enabled: true
+        path: ${quarkus.http.non-application-root-path}/prometheus
+  smallrye-openapi:
+    enable: true
+    path: /services/jaxrs/v2/api-docs
+    info-version: version1.0
+#    jwt-bearer-format: JWT
+#    jwt-security-scheme-value: Basic
+#    security-scheme: oidc
+#    security-scheme-name: keycloak
+#    oidc-open-id-connect-url: http://localhost:7080/auth/realms/saber66/.well-known/openid-configuration
+#    oauth2-redirect-url: http://localhost:9010/swagger-ui.html
+
+  swagger-ui:
+      enable: true
+      path: /swagger
+      theme: material
+#      oauth2-redirect-url: http://localhost:9010/swagger-ui.html
+
+      urls:
+        camel: ${service.api.base-path}${service.api.swagger-path}
+        jaxrs: ${quarkus.smallrye-openapi.path}
+
+service:
+  api:
+    base-path: /services/keycloak-camel
+    swagger-path: /v2/api-dcos
+  log:
+    pretty-print: true
